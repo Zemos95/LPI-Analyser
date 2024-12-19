@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "LPI-Analyser"
+version = "0.0.1"
+description = "Ein LPI internes Analysetool."
+author = [{name = "Nico Dieckmann", email = "dieckmann@lpi-ing.de"}]
+requires-python = ">= 3.13"
+dependencies = [
+    "numpy >= 2.2.0",
+    "PyQt6 >= 6.8.0",
+]
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+
+[project.optional-dependencies]
+dev = ["black >= 22.0", "flake8 >= 3.9"]
+
+[project.scripts]
+lpi-analyser = "src.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

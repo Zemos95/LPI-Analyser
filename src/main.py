@@ -15,9 +15,14 @@ Abhängigkeiten:
 
 def main() -> None:
     """
-    
-    
+    Dies ist die main-Funktion über die die gesamte Software gestartet wird.
+    ----
+    Input: None
+    ----
+    Output: None
     """
+    
+    print("Hello World!")
 
 if __name__ == '__main__':
     main()
