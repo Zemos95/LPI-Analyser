@@ -5,7 +5,7 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Abhängigkeiten kopieren und installieren
-COPY pyproject.toml requirements.txt /app/
+COPY pyproject.toml /app/
 RUN pip install --upgrade pip && pip install hatch && hatch env create
 
 # Quellcode kopieren
