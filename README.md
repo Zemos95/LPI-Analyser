@@ -70,9 +70,7 @@ Ein Python-basiertes Tool zur Rainflow- und FFT-Analyse, mit einer benutzerfreun
 - **`logs/`**: Enthält Log-Dateien zur Fehlerdiagnose.
   - **`app.log`**: Hauptlogdatei der Anwendung.
 
-- **`requirements.txt`**: Liste der Python-Abhängigkeiten für das Projekt.
-
-- **`setup.py`**: Setup-Datei zur Installation des Projekts.
+- **`pyproject.toml`**: Setup-Datei zur Installation des Projekts.
 
 - **`README.md`**: Dokumentation des Projekts.
 
