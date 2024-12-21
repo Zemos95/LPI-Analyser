@@ -12,6 +12,8 @@ Abhängigkeiten:
 - application_window aus dem `gui`-Modul
 """
 
+# Import 
+from gui import GUI
 
 def main() -> None:
     """
@@ -23,6 +25,7 @@ def main() -> None:
     """
     
     print("Hello World!")
+    GUI()
 
 if __name__ == '__main__':
     main()
