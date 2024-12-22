@@ -69,10 +69,14 @@ Ein Python-basiertes Tool zur Rainflow- und FFT-Analyse, mit einer benutzerfreun
 
 - **`logs/`**: Enthält Log-Dateien zur Fehlerdiagnose.
   - **`app.log`**: Hauptlogdatei der Anwendung.
-
+- **`.dockerignore`**: Enthält alle Informationen die beim "build" des Dockers ignoriert werden.
+- **`.gitignore`**: Enthält alle Informationen die beim Hochladen in git ignoriert werden.
+- **`..github`**:Enthält den Ordner workflows
+  - - **`.ci.yml`**: Enthält die CI-Pipline Information-
+- **`LICENSE`**: Lizenzdatei für das Projekt.
 - **`pyproject.toml`**: Setup-Datei zur Installation des Projekts.
 
 - **`README.md`**: Dokumentation des Projekts.
 
-- **`LICENSE`**: Lizenzdatei für das Projekt.
+
 

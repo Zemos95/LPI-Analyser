@@ -46,6 +46,7 @@ COPY src /app/src
 # Umgebungsvariablen für X11 setzen
 ENV QT_QPA_PLATFORM=xcb 
 ENV QT_DEBUG_PLUGINS=1
+ENV DISPLAY=:0
 
 # Start der Anwendung
 CMD ["python", "src/main.py"]
