@@ -20,6 +20,7 @@ Beispiel:
     try:
         x = 1 / 0  # Löst eine ZeroDivisionError aus
     except Exception as e:
+        logging.info(""Diviion by Zero)
         raise CustomException(e, sys)
 
 Erzeugt folgende Fehlermeldung:

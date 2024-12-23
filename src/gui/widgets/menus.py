@@ -9,10 +9,12 @@ Klassen:
 - **StatusBar**: Repräsentiert die benutzerdefinierte Statusleiste und bietet Methoden zur Anzeige von Nachrichten.
 """
 
-from PyQt6.QtWidgets import QMenuBar, QStatusBar
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtGui import QAction
 
+# Imports
+from PyQt6.QtWidgets import QMenuBar, QStatusBar, QLabel
+from PyQt6.QtCore import pyqtSignal, QTimer
+from PyQt6.QtGui import QAction
+import psutil
 
 class MenuBar(QMenuBar):
     """
@@ -109,16 +111,41 @@ class MenuBar(QMenuBar):
 
 class StatusBar(QStatusBar):
     """
-    Eine benutzerdefinierte Klasse, die von QStatusBar erbt. Die Klasse bietet Funktionen zur Anzeige von Statusmeldungen.
+    Eine benutzerdefinierte Klasse, die von QStatusBar erbt. Die Klasse bietet Funktionen zur Anzeige von Statusmeldungen bzw. Statusinformationen
     """
-
     def __init__(self) -> None:
         """
         Initialisiert die StatusBar.
         """
         super().__init__()
+        self.init_cpu_ram_status()
 
+
+    def init_cpu_ram_status(self) -> None:
+        # Erstelle Labels für CPU- und RAM-Auslastung
+        self.cpu_label = QLabel("CPU: 0%")
+        self.ram_label = QLabel("RAM: 0%")
+
+        # Füge die Labels zur Statusleiste hinzu
+        self.addPermanentWidget(self.cpu_label)
+        self.addPermanentWidget(self.ram_label)
+
+        # Timer für regelmäiges Update
+        self.update_timer = QTimer(self)
+        self.update_timer.timeout.connect(self.update_system_stats)
+        self.update_timer.start(1000) # Aktualisiere alle 1000 ms
     
+    def update_system_stats(self) -> None:
+        """
+        Aktualsiere die CPU und RAM-Auslastung und zeigt sie in der Statusleiste an
+        """
+        cpu_usage = psutil.cpu_percent(interval=0)
+        ram_usage = psutil.virtual_memory().percent
+
+        self.cpu_label.setText(f"CPU: {cpu_usage}%")
+        self.ram_label.setText(f"RAM: {ram_usage}%")
+
+
     def show_rainflow_start_status(self) -> None:
         """
         Zeigt eine Nachricht in der Statusleiste an, die den Benutzer darüber informiert, dass die Rainflow-Anwendung gestartet wird.

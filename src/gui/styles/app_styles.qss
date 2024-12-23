@@ -1,0 +1,131 @@
+/* Allgemeine Einstellungen */
+QWidget {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12pt;
+    color: #333333;  /* Dunkelgrauer Text */
+    background-color: #F4F4F4;  /* Leichtes Hellgrau */
+    border: none;
+}
+
+/* Fensterrahmen */
+QMainWindow {
+    background-color: #FFFFFF;  /* Weißer Hintergrund */
+    border: 1px solid #E0E0E0;
+    border-radius: 10px;  /* Abgerundete Ecken */
+    padding: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Schatten für modernen Look */
+}
+
+/* Menüleiste */
+QMenuBar {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:0, 
+        stop:0 #0078D7, stop:1 #005A9E
+    ); /* Farbverlauf von Blau zu Dunkelblau */
+    color: #FFFFFF; /* Weißer Text */
+    padding: 5px;
+    border-bottom: 2px solid #005A9E;
+}
+QMenuBar::item {
+    padding: 5px 15px;
+    background: transparent;
+    border-radius: 5px;
+}
+QMenuBar::item:selected {
+    background: #00457C; /* Dunkleres Blau bei Hover */
+}
+
+/* Menüs */
+QMenu {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    padding: 10px;
+    border-radius: 8px;
+}
+QMenu::item {
+    padding: 8px 20px;
+    background: transparent;
+    border-radius: 5px;
+}
+QMenu::item:selected {
+    background: #E3F2FD; /* Hellblau bei Hover */
+    color: #333333;      /* Dunkelgrauer Text */
+}
+
+/* Statusleiste */
+QStatusBar {
+    background: #333333; /* Dunkelgrau */
+    color: #FFFFFF;      /* Weißer Text */
+    border-top: 2px solid #555555; /* Abgrenzung */
+    padding: 5px;
+    font-size: 11pt;
+}
+QStatusBar::item {
+    color: #FFFFFF;
+    border: none;
+}
+
+/* Buttons */
+QPushButton {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:0, 
+        stop:0 #0078D7, stop:1 #005A9E
+    ); /* Farbverlauf Blau */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background: #005A9E; /* Dunkleres Blau bei Hover */
+}
+QPushButton:pressed {
+    background: #003A75; /* Sehr dunkles Blau bei Klick */
+}
+
+/* Eingabefelder */
+QLineEdit {
+    background-color: #FFFFFF;
+    border: 2px solid #E0E0E0;
+    border-radius: 5px;
+    padding: 8px;
+}
+QLineEdit:focus {
+    border: 2px solid #0078D7; /* Blau bei Fokus */
+    box-shadow: 0px 0px 5px rgba(0, 120, 215, 0.5); /* Leuchtender Effekt */
+}
+
+/* Tabellen */
+QTableWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 8px;
+    gridline-color: #EEEEEE;
+    font-size: 11pt;
+}
+QTableWidget::item {
+    padding: 8px;
+}
+QTableWidget::item:selected {
+    background-color: #D9EFFF; /* Hellblau bei Auswahl */
+    color: #000000;
+}
+
+/* Fortschrittsbalken */
+QProgressBar {
+    border: 2px solid #CCCCCC;
+    border-radius: 5px;
+    text-align: center;
+    background: #EEEEEE;
+}
+QProgressBar::chunk {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:0, 
+        stop:0 #0078D7, stop:1 #005A9E
+    );
+    border-radius: 5px;
+}
+
+/* Scrollbars */
+QScrollBar:vertical

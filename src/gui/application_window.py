@@ -1,6 +1,27 @@
 """
 application_window.py
 
+Signal-Slot-Mechanismus:
+
+1. Der Benutzer klickt in der `MenuBar` auf "Rainflow".
+2. Das `triggered`-Signal der `QAction` löst die Methode `emit_rainflow` in der `MenuBar` aus.
+3. Die Methode `emit_rainflow` ruft `self.rainflow_triggered.emit()` auf.
+4. Das benutzerdefinierte Signal `rainflow_triggered` wird ausgelöst.
+5. Im `ApplicationWindow` wird das Signal `rainflow_triggered` mit dem Slot `show_rainflow_status` in der `StatusBar` verbunden.
+6. Der Slot `show_rainflow_status` zeigt die Nachricht "Die Rainflow-Anwendung wird gestartet..." in der Statusleiste an.
+
+Zusammenhängende Klassen:
+- MenuBar:
+  - Enthält das Signal `rainflow_triggered`.
+  - Sendet das Signal, wenn der Benutzer auf "Rainflow" klickt.
+- StatusBar:
+  - Enthält den Slot `show_rainflow_status`.
+  - Reagiert auf das Signal `rainflow_triggered`.
+- ApplicationWindow:
+  - Verbindet das Signal `rainflow_triggered` aus der `MenuBar` mit dem Slot `show_rainflow_status` in der `StatusBar`.
+
+---
+
 Dieses Skript enthält die Klasse `ApplicationWindow`, die das Hauptfenster der Anwendung definiert.
 Die Klasse erbt von QMainWindow und integriert die Statusleiste und Menüleiste in die GUI.
 

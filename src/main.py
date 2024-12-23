@@ -12,8 +12,12 @@ Abhängigkeiten:
 - application_window aus dem `gui`-Modul
 """
 
-# Import 
+# Import
+import sys 
+from src.utils.logging_setup import logging
 from gui import run_app
+#from utils.logging_setup import initialize_logging  # Logging-Setup importieren
+from utils.exception_setup import CustomException
 
 def main() -> None:
     """
@@ -23,8 +27,19 @@ def main() -> None:
     ----
     Output: None
     """
+    # Schritt 1: Initialisierung des Logging-Systems
+    try: 
+        print("Initialisierung des Fehlerspeichers..")
+        #initialize_logging()
+        logging.info("Fehlerspeicher wurde erfolgreich gestartet.")
+        
 
-    print("Starte GUI")
-    run_app()
+        # Schritt 2: Starten der GUI
+        print("Starte GUI")
+        run_app()
+        logging.info("LPI-Analyser wurde erfolgreich gestartet.")
+    except Exception as e:
+        logging.info("Ein unerwarteter Fehler ist aufgetreten")
+        raise CustomException(e, sys)
 if __name__ == '__main__':
     main()
