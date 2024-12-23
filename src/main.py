@@ -13,7 +13,7 @@ Abhängigkeiten:
 """
 
 # Import 
-from gui import GUI
+from gui import run_app
 
 def main() -> None:
     """
@@ -23,9 +23,8 @@ def main() -> None:
     ----
     Output: None
     """
-    
-    print("Hello World!")
-    GUI()
 
+    print("Starte GUI")
+    run_app()
 if __name__ == '__main__':
     main()
