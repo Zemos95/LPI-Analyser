@@ -1,7 +1,10 @@
-# LPI-Analyser 
+
+# LPI-Analyser
+
 Ein Python-basiertes Tool zur Rainflow- und FFT-Analyse, mit einer benutzerfreundlichen Oberfläche und modularer Architektur.
 
 ---
+
 ## Projektstruktur
 
 - **`src/`**: Hauptquellcode des Projekts.
@@ -78,5 +81,71 @@ Ein Python-basiertes Tool zur Rainflow- und FFT-Analyse, mit einer benutzerfreun
 
 - **`README.md`**: Dokumentation des Projekts.
 
+---
 
+## Installation
 
+### Voraussetzungen
+1. Installiere Python 3.10 oder höher.
+2. Stelle sicher, dass `pip` und `virtualenv` installiert sind:
+   ```bash
+   pip install --upgrade pip
+   pip install virtualenv
+   ```
+
+### Schritte
+1. **Repository klonen**:
+   ```bash
+   git clone <repository-url>
+   cd LPI-Analyser
+   ```
+
+2. **Virtuelles Environment erstellen und aktivieren**:
+   - **Windows**:
+     ```bash
+     python -m venv venv
+     .\venv\Scripts\activate
+     ```
+   - **macOS/Linux**:
+     ```bash
+     python3 -m venv venv
+     source venv/bin/activate
+     ```
+
+3. **Abhängigkeiten installieren**:
+   Führe im Projektverzeichnis den folgenden Befehl aus:
+   ```bash
+   pip install .
+   ```
+
+4. **Projekt starten**:
+   ```bash
+   python src/main.py
+   ```
+---
+
+## GUI
+
+### Signal-Slot-Mechanismus
+
+Das Projekt verwendet das Signal-Slot-System von PyQt, um lose gekoppelte Interaktionen zwischen GUI-Komponenten zu ermöglichen.
+
+#### Ablauf:
+1. Der Benutzer klickt in der `MenuBar` auf "Rainflow".
+2. Das `triggered`-Signal der `QAction` löst die Methode `emit_rainflow` in der `MenuBar` aus.
+3. Die Methode `emit_rainflow` ruft `self.rainflow_triggered.emit()` auf.
+4. Das benutzerdefinierte Signal `rainflow_triggered` wird ausgelöst.
+5. Im `ApplicationWindow` wird das Signal `rainflow_triggered` mit dem Slot `show_rainflow_status` in der `StatusBar` verbunden.
+6. Der Slot `show_rainflow_status` zeigt die Nachricht "Die Rainflow-Anwendung wird gestartet..." in der Statusleiste an.
+
+### Klassenübersicht:
+- **MenuBar**:
+  - Enthält das Signal `rainflow_triggered`.
+  - Sendet das Signal, wenn der Benutzer auf "Rainflow" klickt.
+
+- **StatusBar**:
+  - Enthält den Slot `show_rainflow_status`.
+  - Reagiert auf das Signal `rainflow_triggered`.
+
+- **ApplicationWindow**:
+  - Verbindet das Signal `rainflow_triggered` aus der `MenuBar` mit dem Slot `show_rainflow_status` in der `StatusBar`.
