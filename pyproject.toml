@@ -7,11 +7,12 @@ name = "LPI-Analyser"
 version = "0.0.1"
 description = "Ein LPI internes Analysetool."
 author = [{name = "Nico Dieckmann", email = "dieckmann@lpi-ing.de"}]
-requires-python = ">= 3.13"
+requires-python = "== 3.11"
 dependencies = [
-    "numpy >= 2.2.0",
-    "PyQt6 >= 6.8.0",
-    "pytest >= 8.3.4",
+    "numpy == 2.2.0",
+    "PyQt6 == 6.8.0",
+    "pytest == 8.3.4",
+    "psutil == 6.1.1",
 ]
 readme = "README.md"
 license = {file = "LICENSE.txt"}
