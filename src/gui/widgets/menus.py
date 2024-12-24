@@ -25,8 +25,9 @@ class MenuBar(QMenuBar):
         rainflow_triggered (pyqtSignal): Signal, das ausgelöst wird, wenn die Rainflow-Aktion gestartet wird.
     """
 
-    rainflow_triggered: pyqtSignal = pyqtSignal()
-    fft_triggered: pyqtSignal = pyqtSignal()
+    rainflow_env_start_triggered: pyqtSignal = pyqtSignal(str)
+    fft_env_start_triggered: pyqtSignal = pyqtSignal(str)
+    monitoring_viewer_start_triggered: pyqtSignal = pyqtSignal(str)
 
     def __init__(self) -> None:
         """
@@ -34,7 +35,8 @@ class MenuBar(QMenuBar):
         """
         super().__init__()
         self.init_menu()
-
+    
+    
     def init_menu(self) -> None:
         """
         Erstellt die Menüs und Aktionen für die Menüleiste, einschließlich Datei-, Analyse- und Hilfe-Menüs.
@@ -57,17 +59,28 @@ class MenuBar(QMenuBar):
 
         # Aktion: Rainflow Analyse
         rainflow_action = QAction("Rainflow", self)
-        rainflow_action.triggered.connect(self.emit_rainflow)
+        rainflow_action.triggered.connect(lambda: self.rainflow_env_start_triggered.emit("Rainflow-Anwendung wird gestaret..."))
         analyse_menu.addAction(rainflow_action)
 
         # Aktion: FFT-Analyse
         fft_action = QAction("FFT", self)
-        fft_action.triggered.connect(self.emit_fft)
+        fft_action.triggered.connect(lambda: self.fft_env_start_triggered.emit("FFT-Anwendung wird gestartet..."))
         analyse_menu.addAction(fft_action)
 
+        # Erstellung Visualisierungs-Menü
+        viewer_menu = self.addMenu("Visualisierung")
+
+        # Aktion: Monitoring-Viewer
+        monitoring_viewer_action = QAction("Monitoring-Viewer", self)
+        monitoring_viewer_action.triggered.connect(lambda: self.monitoring_viewer_start_triggered.emit("Monitoring Viewer wird gestartet..."))
+        viewer_menu.addAction(monitoring_viewer_action)
+
+        
+        # Erstellung "Einstellungen"
+        help_menu = self.addMenu("Einstellungen")
+        
         # Erstellung "Hilfe-Menü"
         help_menu = self.addMenu("Hilfe")
-
         # Aktion: Über
         about_action = QAction("Über", self)
         about_action.triggered.connect(self.show_about_dialog)
@@ -87,21 +100,6 @@ class MenuBar(QMenuBar):
         """
         pass
 
-    
-    def emit_rainflow(self) -> None:
-        """
-        Löst das Signal `rainflow_triggered` aus, das mit der Rainflow-Analyse verknüpft ist.
-        """
-        self.rainflow_triggered.emit()
-
-    
-    def emit_fft(self) -> None:
-        """
-        Slot für die FFT-Analyse-Aktion. Führt die Logik zur FFT-Analyse aus.
-        """
-        self.fft_triggered.emit()
-
-    
     def show_about_dialog(self) -> None:
         """
         Slot für die Über-Aktion. Zeigt einen Dialog mit Informationen über die Anwendung an.
@@ -144,19 +142,8 @@ class StatusBar(QStatusBar):
 
         self.cpu_label.setText(f"CPU: {cpu_usage}%")
         self.ram_label.setText(f"RAM: {ram_usage}%")
-
-
-    def show_rainflow_start_status(self) -> None:
-        """
-        Zeigt eine Nachricht in der Statusleiste an, die den Benutzer darüber informiert, dass die Rainflow-Anwendung gestartet wird.
-        """
-        self.showMessage("Die Rainflow-Anwendung wird gestartet...", 2000)
     
-
-    def show_fft_start_status(self) -> None:
-        """
-        Zeiogt eine Nachricht in der Statusleiste an, die den Benutzer darüber informiert, dass die Rainflow-Anwendung gestartet wird.
-        """
-        self.showMessage("Die FFT-Anwendung wird gestartet...", 2000)
-
+    def show_status(self, message: str) -> None:
+        """ Zeigt eine Statusmeldung an. """
+        self.showMessage(message, 2000)
 

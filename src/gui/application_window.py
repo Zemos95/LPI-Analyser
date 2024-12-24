@@ -34,8 +34,14 @@ Methoden:
 """
 
 # Import
-from PyQt6.QtWidgets import QMainWindow
+import os
+from src.utils.logging_setup import logging
+from PyQt6.QtWidgets import QMainWindow, QWidget
+from PyQt6.QtGui import QPainter, QPixmap, QIcon
+from PyQt6.QtCore import Qt
 from gui.widgets.menus import MenuBar, StatusBar
+
+
 
 
 class ApplicationWindow(QMainWindow):
@@ -58,25 +64,72 @@ class ApplicationWindow(QMainWindow):
         """
         super().__init__()
         self.setWindowTitle("LPI-Analyser")
-        self.setGeometry(100, 100, 800, 600)
+        # Setze Geometry der Applikation auf volle Bildschirmgröße
+        self.showMaximized()
+        # Pfad zum Hintergrundbild"
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.background_image_path = os.path.join(self.current_dir, "resources/images/lpi_background_image.png")
+        # Pfad zum logo
+        self.icon_path = os.path.join(self.current_dir, "resources/images/logo.png")
+        # Füge Initialisierung der UI hinzu
         self.init_ui()
 
-    def init_ui(self) -> None:
+      
+    def paintEvent(self, event) -> None:
+        """Stellt ein Hintergrundbild da:
+        ---
+        Input: self
+        ---
+        Output: None
         """
-        Bindet die Benutzeroberfläche an das Hauptfenster.
+        painter = QPainter(self)
+        pixmap = QPixmap(self.icon_path)
+        if not pixmap.isNull(): # Uberprüfung, ob das Bild geladen werden konnte
+            # Hole die Originalgröße des Bildes (falls nötig, überprüfe die Skalierungsoptionen)
+            pixmap = pixmap.scaledToWidth(pixmap.width(), Qt.TransformationMode.SmoothTransformation)
+            # Originalgröße des Pixmaps
+            pixmap_width = pixmap.width()
+            pixmap_height = pixmap.height()
+
+            # Fenstergröße
+            window_width = self.width()
+            window_height = self.height()
+
+            # Berechne die Position, um das Bild zu zentrieren
+            x = (window_width - pixmap_width) // 2
+            y = (window_height - pixmap_height) // 2
+
+            # Zeichne das Bild in Originalgröße zentriert
+            painter.drawPixmap(x, y, pixmap)
+        else:
+          logging.info("Hintergrundbild konnte nicht geladen werden: {self.background_image_path}")
+        #painter.drawPixmap(self.rect(), pixmap)
+    
+    def get_window_icon(self) -> QIcon:
+        """
+        Lädt das Fenster-Icon.
+
+        Returns:
+            QIcon: Das Fenster-Icon.
+        """
         
-        Funktionen:
-        - Fügt die Statusleiste ein und setzt sie in das Hauptfenster.
-        - Fügt die Menüleiste ein und verbindet Signale mit Slots.
-        """
-        # Statusleiste einfügen
+        if os.path.exists(self.icon_path):
+            return QIcon(self.icon_path)
+        else:
+            logging.warning(f"Fenster-Icon nicht gefunden: {self.icon_path}")
+            return QIcon()
+
+    def init_ui(self) -> None:
+        """Bindet die Benutzeroberfläche an das Hauptfenster."""
+        
+        # Statusleisteeinfügen
         self.status_bar = StatusBar()
-        # Statusleiste einfügen
         self.setStatusBar(self.status_bar)
 
         # Menüleiste einfügen
         self.menu_bar = MenuBar() # Erstellung Menüleiste
-        self.menu_bar.rainflow_triggered.connect(self.status_bar.show_rainflow_start_status) # Verbindung Menu/Status-Bar
-        self.menu_bar.fft_triggered.connect(self.status_bar.show_fft_start_status) # Verbindung Menu/Status-Bar
+        self.menu_bar.rainflow_env_start_triggered.connect(self.status_bar.show_status) # Verbindung Menu/Status-Bar
+        self.menu_bar.fft_env_start_triggered.connect(self.status_bar.show_status) # Verbindung Menu/Status-Bar
+        self.menu_bar.monitoring_viewer_start_triggered.connect(self.status_bar.show_status)
         # Setzen der Menüleiste
         self.setMenuBar(self.menu_bar)
