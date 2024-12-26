@@ -44,7 +44,7 @@ from gui.widgets.menus import MenuBar, StatusBar
 
 
 
-class ApplicationWindow(QMainWindow):
+class MainWindow(QMainWindow):
     """
     Repräsentiert das Hauptfenster der Anwendung. Diese Klasse erbt von QMainWindow und fügt benutzerdefinierte 
     GUI-Komponenten wie eine Menüleiste und eine Statusleiste hinzu.

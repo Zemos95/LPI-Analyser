@@ -1,8 +1,10 @@
 import os
 import sys
-from src.utils.logging_setup import logging
+from src.utils.logging_setup import Logger  # Dein Logger
 from PyQt6.QtWidgets import QApplication
-from utils.exception_setup import CustomException
+from src.utils.logging_setup import Logger  # Importiere den Logger
+
+logger = Logger().get_logger()  # Logger abrufen
 
 def apply_stylesheet(app: QApplication, stylesheet_name: str) -> None:
     """
@@ -13,45 +15,35 @@ def apply_stylesheet(app: QApplication, stylesheet_name: str) -> None:
         stylesheet_name (str): Der Name der Stylesheet-Datei im Verzeichnis `styles`.
 
     Raises:
-        CustomException: Wenn die Stylesheet-Datei nicht gefunden wird, leer ist oder ein Fehler beim Laden auftritt.
+        FileNotFoundError: Wenn die Stylesheet-Datei nicht gefunden wird.
+        ValueError: Wenn die Stylesheet-Datei leer ist.
+        Exception: Wenn ein anderer Fehler beim Laden oder Anwenden des Stylesheets auftritt.
     """
-    try:
-        logging.info(f"Beginne, das Stylesheet '{stylesheet_name}' zu laden.")  # Startmeldung
-    except Exception as e:
-        logging.info("Fehler beim Starten der Stylesheet-Operation.")
-        raise CustomException(e, sys)
 
-    # Absoluter Pfad zur QSS-Datei bestimmen
     try:
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # Verzeichnis `styles`
+        logger.info(f"Beginne, das Stylesheet '{stylesheet_name}' zu laden.")  # Startmeldung
+
+        # Absoluter Pfad zur QSS-Datei bestimmen
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # Verzeichnis bestimmen
         stylesheet_path = os.path.join(base_dir, stylesheet_name)
-    except Exception as e:
-        logging.info("Fehler beim Erstellen des Pfads zur Stylesheet-Datei.")
-        raise CustomException(e, sys)
 
-    # Prüfen, ob die Datei existiert
-    try:
+        # Prüfen, ob die Datei existiert
         if not os.path.exists(stylesheet_path):
-            logging.info(f"Stylesheet '{stylesheet_name}' wurde nicht gefunden unter {stylesheet_path}")
-            raise FileNotFoundError(f"Stylesheet '{stylesheet_name}' wurde nicht gefunden.")
-    except Exception as e:
-        logging.info("Fehler beim Überprüfen der Existenz der Stylesheet-Datei.")
-        raise CustomException(e, sys)
+            error_message = f"Stylesheet '{stylesheet_name}' wurde nicht gefunden unter {stylesheet_path}"
+            logger.error(error_message)
+            raise FileNotFoundError(error_message)
 
-    # Prüfen, ob die Datei Inhalt hat
-    try:
+        # Prüfen, ob die Datei Inhalt hat
         if os.path.getsize(stylesheet_path) == 0:
-            logging.info(f"Stylesheet '{stylesheet_name}' ist leer.")
-            raise ValueError(f"Stylesheet '{stylesheet_name}' ist leer.")
-    except Exception as e:
-        logging.info("Fehler beim Überprüfen der Dateigröße.")
-        raise CustomException(e, sys)
+            error_message = f"Stylesheet '{stylesheet_name}' ist leer."
+            logger.error(error_message)
+            raise ValueError(error_message)
 
-    # Stylesheet laden und anwenden
-    try:
+        # Stylesheet laden und anwenden
         with open(stylesheet_path, "r") as file:
             app.setStyleSheet(file.read())
-            logging.info(f"Stylesheet '{stylesheet_name}' erfolgreich angewendet.")
+            logger.info(f"Stylesheet '{stylesheet_name}' erfolgreich angewendet.")
+
     except Exception as e:
-        logging.info("Fehler beim Laden und Anwenden des Stylesheets.")
-        raise CustomException(e, sys)
+        logger.error(f"Fehler beim Verarbeiten des Stylesheets '{stylesheet_name}': {e}", exc_info=True)
+        raise

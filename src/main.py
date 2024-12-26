@@ -13,11 +13,9 @@ Abhängigkeiten:
 """
 
 # Import
-import sys 
-from src.utils.logging_setup import logging
-from gui import run_app
-#from utils.logging_setup import initialize_logging  # Logging-Setup importieren
-from utils.exception_setup import CustomException
+from src.gui import run_app
+from src.utils.logging_setup import Logger  
+
 
 def main() -> None:
     """
@@ -29,17 +27,18 @@ def main() -> None:
     """
     # Schritt 1: Initialisierung des Logging-Systems
     try: 
-        print("Initialisierung des Fehlerspeichers..")
-        #initialize_logging()
-        logging.info("Fehlerspeicher wurde erfolgreich gestartet.")
+        # Initialisierung des Loggers
+        logger_instance = Logger(name="LPI-Analyser", log_file="LPI_analyser_logfile.log", level="INFO")
+        logger = logger_instance.get_logger()
+        logger.info("Logger wurde erfolgreich gestartet.")
         
 
-        # Schritt 2: Starten der GUI
-        print("Starte GUI")
+        # Starten der GUI
         run_app()
-        logging.info("LPI-Analyser wurde erfolgreich gestartet.")
+        logger.info("LPI-Analyser wurde erfolgreich gestartet.")
+
     except Exception as e:
-        logging.info("Ein unerwarteter Fehler ist aufgetreten")
-        raise CustomException(e, sys)
+        logger.error("Ein Fehler ist aufgetreten: {e}")
+        raise
 if __name__ == '__main__':
     main()

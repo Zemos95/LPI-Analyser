@@ -1,51 +1,58 @@
-"""
-logging_setup.py
-
-Dieses Skript richtet ein Logging-System ein, um konsistente und strukturierte Log-Dateien in Python-Anwendungen zu erstellen.
-
-Funktionen:
-- Erzeugt eine Log-Datei mit einem Zeitstempel im Dateinamen.
-- Erstellt automatisch ein Verzeichnis "logs", falls es nicht existiert.
-- Konfiguriert die Logging-Einstellungen, einschließlich Dateispeicherort, Format und Log-Level.
-
-Details der Konfiguration:
-- **log_file**: Speichert den Namen der Log-Datei, der mit dem aktuellen Datum und der Uhrzeit generiert wird.
-- **log_path**: Speichert den Pfad des Verzeichnisses, in dem die Log-Datei abgelegt wird.
-- **basicConfig**:
-  - **filename**: Legt fest, in welcher Datei die Logs gespeichert werden.
-  - **format**: Definiert das Format der Log-Einträge:
-    - **%(asctime)s**: Zeitstempel des Log-Eintrags.
-    - **%(lineno)d**: Zeilennummer, in der das Log erstellt wurde.
-    - **%(name)s**: Name des Loggers.
-    - **%(levelname)s**: Schweregrad des Logs (z. B. INFO, ERROR).
-    - **%(message)s**: Inhalt der Log-Nachricht.
-  - **level**: Definiert die minimale Log-Ebene (standardmäßig `logging.INFO`).
-"""
-
-# Import der benötigten Module
 import logging
+from logging.handlers import RotatingFileHandler
 import os
-from datetime import datetime
 
-# Schritt 1: Generierung des Log-Dateinamens (mit Zeitstempel)
-log_file = f"{datetime.now(tz=None).strftime('%m_%d_%Y_%H_%M_%S')}_logfile.log"  # Beispiel: 12_20_2024_15_30_45_logfile.log
+class Logger:
+    _instance = None
 
-# Schritt 2: Festlegung des Log-Verzeichnisses
-log_path = os.path.join(os.getcwd(), "logs")  # Das "logs"-Verzeichnis wird im aktuellen Arbeitsverzeichnis erstellt
+    def __new__(cls, *args, **kwargs):
+        """
+        Erstellt eine Singleton-Instanz der Logger-Klasse.
+        """
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
-# Schritt 3: Erstellung des Log-Verzeichnisses (falls nicht vorhanden)
-os.makedirs(log_path, exist_ok=True)
+    def __init__(self, name: str="LPI-Analyser", log_file: str = "LPI-Analyser_logfile.log", level: int = logging.INFO):
+        """
+        Initialisiert den Logger.
 
-# Schritt 4: Kombination von Verzeichnis und Dateiname zu einem vollständigen Pfad
-log_file_path = os.path.join(log_path, log_file)
+        :param name: Name des Loggers
+        :param log_file: Name der Log-Datei
+        :param level: Logging-Level (z.B. logging.DEBUG, logging.INFO)
+        """
+        if not hasattr(self, "logger"):
+            self.logger = logging.getLogger(name)
+            self.logger.setLevel(level)
 
-# Schritt 5: Konfiguration des Logging-Systems
-logging.basicConfig(
-    filename=log_file_path,  # Speicherort der Log-Datei
-    format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",  # Log-Format
-    level=logging.INFO,  # Log-Level: Erfasst alle Nachrichten ab INFO
-)
+            # Sicherstellen, dass der Ordner "logs" existiert
+            log_directory = os.path.join(os.getcwd(), "logs")
+            os.makedirs(log_directory, exist_ok=True)
 
-# Hinweis:
-# - Dieses Skript wird beim Import automatisch ausgeführt und erstellt die Log-Datei im definierten Verzeichnis.
-# - Die Konfiguration kann bei Bedarf angepasst werden, um unterschiedliche Formate oder Log-Levels zu verwenden.
+            # Log-Dateipfad erstellen
+            log_file_path = os.path.join(log_directory, log_file)
+
+            # Format für Logs
+            log_format = logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s"
+            )
+
+            # Datei-Handler mit Rotating Logs
+            file_handler = RotatingFileHandler(
+                log_file_path, maxBytes=5 * 1024 * 1024, backupCount=3
+            )
+            file_handler.setFormatter(log_format)
+            file_handler.setLevel(level)
+
+            # Konsolen-Handler
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(log_format)
+            console_handler.setLevel(level)
+
+            # Handlers zum Logger hinzufügen
+            self.logger.addHandler(file_handler)
+            self.logger.addHandler(console_handler)
+
+    def get_logger(self) -> logging.Logger:
+        """Gibt den konfigurierten Logger zurück."""
+        return self.logger
