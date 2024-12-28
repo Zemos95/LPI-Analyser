@@ -1,7 +1,7 @@
 import os
 import logging
 import pytest
-from src.utils.logging_setup import Logger
+from src.client.utils.client_logging_setup import Logger
 
 @pytest.fixture
 def logger_setup():

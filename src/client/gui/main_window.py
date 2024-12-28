@@ -35,11 +35,11 @@ Methoden:
 
 # Import
 import os
-from src.utils.logging_setup import logging
+import logging
 from PyQt6.QtWidgets import QMainWindow, QWidget
 from PyQt6.QtGui import QPainter, QPixmap, QIcon
 from PyQt6.QtCore import Qt
-from gui.widgets.menus import MenuBar, StatusBar
+from src.client.gui.widgets.menus import MenuBar, StatusBar
 
 
 
@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         menu_bar (MenuBar): Die Menüleiste des Hauptfensters.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, logger: logging.Logger) -> None:
         """
         Initialisiert das Hauptfenster der Anwendung.
         
@@ -63,6 +63,8 @@ class MainWindow(QMainWindow):
         - Ruft `init_ui` auf, um die Benutzeroberfläche zu erstellen.
         """
         super().__init__()
+        # Logger speichern
+        self.logger = logger
         self.setWindowTitle("LPI-Analyser")
         # Setze Geometry der Applikation auf volle Bildschirmgröße
         self.showMaximized()
@@ -102,7 +104,7 @@ class MainWindow(QMainWindow):
             # Zeichne das Bild in Originalgröße zentriert
             painter.drawPixmap(x, y, pixmap)
         else:
-          logging.info("Hintergrundbild konnte nicht geladen werden: {self.background_image_path}")
+          self.logger.warning(f"Hintergrundbild konnte nicht geladen werden: {self.background_image_path}")
         #painter.drawPixmap(self.rect(), pixmap)
     
     def get_window_icon(self) -> QIcon:
@@ -116,7 +118,7 @@ class MainWindow(QMainWindow):
         if os.path.exists(self.icon_path):
             return QIcon(self.icon_path)
         else:
-            logging.warning(f"Fenster-Icon nicht gefunden: {self.icon_path}")
+            self.logger.warning(f"Fenster-Icon nicht gefunden: {self.icon_path}")
             return QIcon()
 
     def init_ui(self) -> None:

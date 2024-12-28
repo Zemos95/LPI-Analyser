@@ -1,12 +1,13 @@
+"""
+"""
+# Import 
 import os
-import sys
-from src.utils.logging_setup import Logger  # Dein Logger
+import logging
+from src.client.utils.client_logging_setup import Logger  
 from PyQt6.QtWidgets import QApplication
-from src.utils.logging_setup import Logger  # Importiere den Logger
 
-logger = Logger().get_logger()  # Logger abrufen
 
-def apply_stylesheet(app: QApplication, stylesheet_name: str) -> None:
+def apply_stylesheet(app: QApplication, stylesheet_name: str, logger: logging.Logger) -> None:
     """
     Lädt und wendet ein Stylesheet (QSS-Datei) auf die Anwendung an.
 
@@ -45,5 +46,6 @@ def apply_stylesheet(app: QApplication, stylesheet_name: str) -> None:
             logger.info(f"Stylesheet '{stylesheet_name}' erfolgreich angewendet.")
 
     except Exception as e:
-        logger.error(f"Fehler beim Verarbeiten des Stylesheets '{stylesheet_name}': {e}", exc_info=True)
+        error_type = type(e).__name__  # Typ der Ausnahme
+        logger.error(f"Fehler beim Verarbeiten des Stylesheets '{stylesheet_name}': {error_type} {e}")
         raise
