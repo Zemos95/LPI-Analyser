@@ -5,23 +5,42 @@ build-backend = "hatchling.build"
 [project]
 name = "LPI-Analyser"
 version = "0.0.1"
-description = "Ein LPI internes Analysetool."
-author = [{name = "Nico Dieckmann", email = "dieckmann@lpi-ing.de"}]
-requires-python = "== 3.11.11"
-dependencies = [
-    "numpy == 2.2.0",
-    "PyQt6 == 6.8.0",
-    "pytest == 8.3.4",
-    "psutil == 6.1.1",
-]
+description = "Ein LPI internes Analysetool zur Benutzer-UI und Serveranalyse."
+authors = [{name = "Nico Dieckmann", email = "dieckmann@lpi-ing.de"}]
+requires-python = "==3.11.11"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 
+# Basis-Abhängigkeiten für beide Pakete
+dependencies = [
+    "pytest == 8.3.4"
+]
+
 [project.optional-dependencies]
-dev = ["black >= 22.0", "flake8 >= 3.9"]
+# Abhängigkeiten für das Client-Paket
+client = [
+    "PyQt6 == 6.8.0",
+    "psutil == 6.1.1"
+]
+
+# Abhängigkeiten für das Server-Paket
+server = [
+    "numpy == 2.2.0",
+    "Flask == 3.0.0",
+    "fastapi == 0.100.0",
+    "uvicorn == 0.23.0"
+]
+
+# Entwicklungstools
+dev = [
+    "black >= 22.0",
+    "flake8 >= 3.9"
+]
 
 [project.scripts]
-lpi-analyser = "src.main:main"
+# Einstiegspunkte für Client und Server
+lpi-client = "src.client.main:main"
+lpi-server = "src.server.app:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src.client", "src.server"]
