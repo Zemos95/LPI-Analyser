@@ -44,7 +44,7 @@ def run_app(logger: logging.Logger) -> None:
     # Hauptfenster starten
     try:
         logger.info("Starte Hauptfenster.")
-        window = MainWindow()
+        window = MainWindow(logger)
         window.show()
     except Exception as e:
         error_type = type(e).__name__  # Typ der Ausnahme

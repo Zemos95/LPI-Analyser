@@ -1,6 +1,8 @@
-import requests
 from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+from src.client.services.auth_manager import authenticate_user
 import logging
+import requests
+
 
 class LoginDialog(QDialog):
     """
@@ -12,7 +14,7 @@ class LoginDialog(QDialog):
         super().__init__(parent)
         self.logger = logger
         self.setWindowTitle("Anmeldung")
-        self.setFixedSize(300, 150)
+        self.setFixedSize(400, 200)
 
         # UI-Komponenten
         self.username_label = QLabel("Benutzername:")
@@ -46,19 +48,22 @@ class LoginDialog(QDialog):
         password = self.password_input.text()
 
         try:
-            # Anfrage an den Flask-Server
-            response = requests.post(
-                "http://127.0.0.1:5000/login",
-                json={"username": username, "password": password}
-            )
+            # Serverkommunikation ausführen
+            response = authenticate_user(username, password, self.logger)
 
-            if response.status_code == 200 and response.json().get("success"):
-                QMessageBox.information(self, "Erfolg", response.json().get("message"))
-                self.logger.info(f"Benutzer {username} hat sich erfolgreich eingeloggt.")
+            # Antwort vom Server verarbeiten
+            server_response = response.json()
+            if server_response.get("success"):
+                QMessageBox.information(self, "Erfolg", server_response.get("message"))
                 self.accept()  # Schließt den Dialog und gibt Erfolg zurück
             else:
-                QMessageBox.warning(self, "Fehler", response.json().get("message"))
-                self.logger.warning(f"Benutzer {username} konnte sich nicht erfolgreich einloggen.")
-        except requests.RequestException as e:
-            self.logger.error(f"Fehler bei der Kommunikation mit dem Server: {e}")
+                QMessageBox.warning(self, "Fehler", server_response.get("message"))
+
+        except requests.HTTPError as http_err:
+            QMessageBox.warning(self, "Fehler", f"HTTP-Fehler: {http_err}")
+
+        except requests.RequestException:
             QMessageBox.critical(self, "Fehler", "Kommunikation mit dem Server fehlgeschlagen.")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Fehler", "Ein unerwarteter Fehler ist aufgetreten.")

@@ -20,7 +20,8 @@ dependencies = [
 # Abhängigkeiten für das Client-Paket
 client = [
     "PyQt6 == 6.8.0",
-    "psutil == 6.1.1"
+    "psutil == 6.1.1",
+    "requests == 2.32.3"
 ]
 
 # Abhängigkeiten für das Server-Paket
@@ -28,7 +29,8 @@ server = [
     "numpy == 2.2.0",
     "Flask == 3.0.0",
     "fastapi == 0.100.0",
-    "uvicorn == 0.23.0"
+    "uvicorn == 0.23.0",
+    "requests == 2.32.3"
 ]
 
 # Entwicklungstools
