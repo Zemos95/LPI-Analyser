@@ -7,7 +7,7 @@ name = "LPI-Analyser"
 version = "0.0.1"
 description = "Ein LPI internes Analysetool zur Benutzer-UI und Serveranalyse."
 authors = [{name = "Nico Dieckmann", email = "dieckmann@lpi-ing.de"}]
-requires-python = "==3.11.11"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 
