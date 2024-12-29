@@ -6,7 +6,7 @@ from src.client.utils.client_logging_setup import Logger
 
 def main() -> None:
     """
-    Dies ist die main-Funktion über die die gesamte Software gestartet wird.
+    Dies ist die main-Funktion über die das UI gestartet wird.
     ----
     Input: None
     ----
@@ -23,13 +23,13 @@ def main() -> None:
     
     try:
         # Starten der GUI
-        logger.info("Starte GUI-Anwendung")
+        logger.info("Beginne GUI-Anwendung zu starten.")
         run_app(logger)
-        logger.info("LPI-Analyser wurde erfolgreich gestartet.")
-
     except Exception as e:
         error_type = type(e).__name__  # Typ der Ausnahme
         logger.error(f"Ein Fehler ist aufgetreten: ({error_type}) {e}")
         raise
+    else:
+        logger.info("GUI wurde erfolgreich gestartet.")
 if __name__ == '__main__':
     main()
