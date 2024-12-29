@@ -1,8 +1,8 @@
 import sys
 from PyQt6.QtWidgets import QApplication
-from gui.main_window import MainWindow
+from src.client.gui.main_window import MainWindow
 from gui.styles import apply_stylesheet
-from src.utils.logging_setup import Logger  # Importiere den Logger
+from src.client.utils.client_logging_setup import Logger  # Importiere den Logger
 
 def run_app() -> None:
     """

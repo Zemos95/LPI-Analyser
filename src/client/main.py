@@ -25,11 +25,11 @@ def main() -> None:
         # Starten der GUI
         logger.info("Starte GUI-Anwendung")
         run_app(logger)
+        logger.info("LPI-Analyser wurde erfolgreich gestartet.")
 
     except Exception as e:
         error_type = type(e).__name__  # Typ der Ausnahme
         logger.error(f"Ein Fehler ist aufgetreten: ({error_type}) {e}")
         raise
-    logger.info("LPI-Analyser wurde erfolgreich gestartet.")
 if __name__ == '__main__':
     main()
