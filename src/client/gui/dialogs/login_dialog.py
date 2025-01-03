@@ -1,8 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
-from src.client.services.auth_manager import authenticate_user
+from src.client.services.api_client import login_request
 import logging
-import requests
-
 
 class LoginDialog(QDialog):
     """
@@ -49,21 +47,14 @@ class LoginDialog(QDialog):
 
         try:
             # Serverkommunikation ausführen
-            response = authenticate_user(username, password, self.logger)
+            response = login_request(username, password)
 
-            # Antwort vom Server verarbeiten
-            server_response = response.json()
-            if server_response.get("success"):
-                QMessageBox.information(self, "Erfolg", server_response.get("message"))
+            if response.get("success"):
+                QMessageBox.information(self, "Erfolg", response.get("message"))
                 self.accept()  # Schließt den Dialog und gibt Erfolg zurück
             else:
-                QMessageBox.warning(self, "Fehler", server_response.get("message"))
-
-        except requests.HTTPError as http_err:
-            QMessageBox.warning(self, "Fehler", f"HTTP-Fehler: {http_err}")
-
-        except requests.RequestException:
-            QMessageBox.critical(self, "Fehler", "Kommunikation mit dem Server fehlgeschlagen.")
+                QMessageBox.warning(self, "Fehler", response.get("message"))
 
         except Exception as e:
+            self.logger.error(f"Fehler bei der Anmeldung: {e}")
             QMessageBox.critical(self, "Fehler", "Ein unerwarteter Fehler ist aufgetreten.")
