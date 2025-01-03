@@ -1,20 +1,25 @@
-from typing import Optional
-from src.server.models.user_model import User
-from src.server.database import get_db
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from src.server.auth.auth_manager import authenticate_user
+from src.server.database.session import get_db
 
-def authenticate_user(username: str, password: str) -> Optional[dict]:
+router = APIRouter()
+
+@router.post("/api/login")
+async def login(username: str, password: str, db: Session = Depends(get_db)):
     """
-    Prüft, ob der Benutzer berechtigt ist, sich anzumelden.
+    Login-Endpunkt für Benutzer.
 
     Args:
         username (str): Der Benutzername.
         password (str): Das Passwort.
+        db (Session): Datenbank-Session.
 
     Returns:
-        dict | None: Benutzerinformationen, falls gültig.
+        dict: Ergebnis der Authentifizierung.
     """
-    db = get_db()
-    user = db.query(User).filter_by(username=username).first()
-    if user and user.verify_password(password):  # Angenommen, die Methode ist implementiert
-        return {"id": user.id, "username": user.username}
-    return None
+    user = authenticate_user(username, password, db)
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Anmeldedaten")
+
+    return {"success": True, "message": "Anmeldung erfolgreich", "user": user}

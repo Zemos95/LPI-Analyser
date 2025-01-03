@@ -1,29 +1,23 @@
-from flask import Flask, request, jsonify
+import uvicorn
+import Server
 
-app = Flask(__name__)
+# Server initialisieren
+server = Server()
 
-# Beispielhafte Anmeldedaten
-USER_CREDENTIALS = {
-    "admin": "password",
-    "user1": "securepassword"
-}
+# Ereignis-Handler hinzufügen
+@server.get_app().on_event("startup")
+async def startup_event():
+    server.initialize_database()
+   # server.logger.info("Server gestartet und bereit.")
+    print("Server wird gestartet..")
 
+@server.get_app().on_event("shutdown")
+async def shutdown_event():
+   # server.logger.info("Server wird heruntergefahren.")
+   print("Server wird heruntergefahren")
 
-@app.route('/login', methods=['POST'])
-def login():
-    """
-    Verarbeitet Login-Anfragen vom Client.
-    Erwartet JSON-Daten mit 'username' und 'password'.
-    """
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
+# FastAPI-App bereitstellen
+app = server.get_app()
 
-    if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-        return jsonify({"success": True, "message": "Login erfolgreich."}), 200
-    else:
-        return jsonify({"success": False, "message": "Ungültige Anmeldedaten."}), 401
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -1,4 +1,5 @@
 import requests
+from src.client.config.settings import BASE_URL
 
 def login_request(username: str, password: str) -> dict:
     """
@@ -11,7 +12,7 @@ def login_request(username: str, password: str) -> dict:
     Returns:
         dict: Die Antwort des Servers.
     """
-    url = "http://localhost:8000/api/login"
+    url = BASE_URL
     payload = {"username": username, "password": password}
 
     try:
